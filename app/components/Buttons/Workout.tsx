@@ -1,16 +1,12 @@
 import React from "react"
 import { Box, HStack, Text } from "native-base"
+import { WorkoutSnapshot } from "../../models"
 
 interface IProps {
-  children?: React.ReactNode
-  name: string
-  duration: string
-  difficulty: string
-  bg?: string
-  image?: string
+  workout: WorkoutSnapshot
 }
 
-export const Workout = ({ bg, name, duration, difficulty }: IProps) => {
+export const Workout = ({ workout }: IProps) => {
   const getRandomColor = () => {
     return (
       "rgb(" +
@@ -27,7 +23,7 @@ export const Workout = ({ bg, name, duration, difficulty }: IProps) => {
     <Box
       w="85%"
       h={100}
-      bg={bg ?? getRandomColor()}
+      bg={getRandomColor()}
       rounded={"3xl"}
       shadow={3}
       px={5}
@@ -37,13 +33,13 @@ export const Workout = ({ bg, name, duration, difficulty }: IProps) => {
       <HStack>
         <Box>
           <Text fontSize={"lg"} bold>
-            {name.toUpperCase()}
+            {workout.name.toUpperCase()}
           </Text>
-          <Text fontSize={"sm"}>{duration.toUpperCase()}</Text>
+          <Text fontSize={"sm"}>Around {workout.duration} minutes</Text>
         </Box>
         <Box flex={1} h={"100%"}>
           <Text pt={"auto"} alignSelf={"flex-end"}>
-            {difficulty.toUpperCase()}
+            {workout.difficulty.toUpperCase()}
           </Text>
         </Box>
       </HStack>
