@@ -8,7 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { HomeScreen } from "../screens"
+import { HomeScreen, WorkoutScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 
 /**
@@ -25,7 +25,7 @@ import { navigationRef } from "./navigation-utilities"
  */
 export type NavigatorParamList = {
   home: undefined
-  welcome: undefined
+  workout: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -40,6 +40,7 @@ const AppStack = () => {
       initialRouteName="home"
     >
       <Stack.Screen name="home" component={HomeScreen} />
+      <Stack.Screen name="workout" component={WorkoutScreen} />
     </Stack.Navigator>
   )
 }

@@ -1,11 +1,14 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { createWorkoutDefaultModel, WorkoutModel, WorkoutSnapshot } from "../workout/workout"
+import { WorkoutModel, WorkoutSnapshot } from "../workout/workout"
 import { withEnvironment } from "../extensions/with-environment"
+import { createExerciseDefaultModel } from "../exercise/exercise"
+import _ from "lodash"
 
 export const WorkoutStoreModel = types
   .model("WorkoutSnapshot")
   .props({
-    workouts: types.array(WorkoutModel),
+    workouts: types.optional(types.array(WorkoutModel), []),
+    currentWorkout: types.maybeNull(WorkoutModel),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -17,7 +20,12 @@ export const WorkoutStoreModel = types
   }))
   .actions((self) => ({
     getWorkouts: async () => {
-      self.saveWorkouts([createWorkoutDefaultModel()])
+      self.saveWorkouts(getWorkoutList())
+    },
+  }))
+  .actions((self) => ({
+    setCurrentWorkout: async (workout: WorkoutSnapshot) => {
+      self.currentWorkout = WorkoutModel.create(_.cloneDeep(workout))
     },
   }))
 
@@ -26,7 +34,25 @@ export interface WorkoutStore extends WorkoutStoreType {}
 type WorkoutStoreSnapshotType = SnapshotOut<typeof WorkoutStoreModel>
 export interface WorkoutStoreSnapshot extends WorkoutStoreSnapshotType {}
 
+export const getWorkoutList = (): WorkoutSnapshot[] => {
+  return [
+    WorkoutModel.create({
+      id: 1,
+      name: "Aphrodite",
+      difficulty: "Medium",
+      duration: 10,
+      exercises: [createExerciseDefaultModel()],
+    }),
+    WorkoutModel.create({
+      id: 2,
+      name: "Autre",
+      difficulty: "Medium",
+      duration: 10,
+      exercises: [createExerciseDefaultModel()],
+    }),
+  ]
+}
 export const createWorkoutStoreDefaultModel = () =>
   WorkoutStoreModel.create({
-    workouts: [createWorkoutDefaultModel()],
+    workouts: getWorkoutList(),
   })

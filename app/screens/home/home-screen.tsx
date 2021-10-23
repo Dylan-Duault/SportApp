@@ -7,14 +7,11 @@ import { NavigatorParamList } from "../../navigators"
 import { HeaderTitle } from "../../components"
 import { ScrollView, VStack } from "native-base"
 import { Workout } from "../../components/Buttons/Workout"
-import { useStores } from "../../models"
+import { useStores, WorkoutSnapshot } from "../../models"
+import { useNavigation } from "@react-navigation/native"
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(() => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const navigation = useNavigation()
 
   const { workoutStore } = useStores()
   const { workouts } = workoutStore
@@ -28,12 +25,24 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     __DEV__ && console.tron.log(workouts)
   }, [])
 
+  const selectWorkout = async (workout: WorkoutSnapshot) => {
+    await workoutStore.setCurrentWorkout(workout)
+
+    navigation.navigate("workout")
+  }
+
   return (
-    <HeaderTitle title={"Workout"}>
+    <HeaderTitle title={"Choose your workout !"}>
       <ScrollView>
         <VStack space={4} alignItems="center" pt={4}>
           {workouts.map((workout) => (
-            <Workout key={workout.id} workout={workout} />
+            <Workout
+              key={workout.id}
+              workout={workout}
+              onPress={() => {
+                selectWorkout(workout)
+              }}
+            />
           ))}
         </VStack>
       </ScrollView>
